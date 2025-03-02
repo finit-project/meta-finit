@@ -15,7 +15,6 @@ def get_custom_rtc_restore_date(d):
 RTC_RESTORE_DATE = "${@get_custom_rtc_restore_date(d)}"
 
 PACKAGECONFIG ??= "auto-reload \
-                   cgroup \
                    fastboot \
                    random-seed \
                    hook-scripts-plugin \
@@ -65,9 +64,9 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master"
 
-SRCREV = "ecf65ce44bd30bb00f2214794143affa04a43c9f"
+SRCREV = "c371c10455ab6612ea2550190c785547f57b2fbc"
 
-PV = "4.9+git${SRCPV}"
+PV = "4.10+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
