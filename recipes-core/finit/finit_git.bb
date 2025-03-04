@@ -64,7 +64,7 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master"
 
-SRCREV = "c371c10455ab6612ea2550190c785547f57b2fbc"
+SRCREV = "7b321de33961e7b0e73b7727346d585dbdf01fbf"
 
 PV = "4.10+git${SRCPV}"
 
