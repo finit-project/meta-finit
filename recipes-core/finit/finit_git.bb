@@ -20,7 +20,6 @@ PACKAGECONFIG ??= "auto-reload \
                    hook-scripts-plugin \
                    kernel-cmdline \
                    modules-load-plugin \
-                   modprobe-plugin \
                    hotplug-plugin \
                    netlink-plugin \
                    dbus-plugin \
