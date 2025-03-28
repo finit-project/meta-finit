@@ -1,1 +1,1 @@
-task [2345] /etc/init.d/connman start -- connman Daemon
+task [2345] <task/variscite-wifi/success> /etc/init.d/connman start -- connman Daemon
