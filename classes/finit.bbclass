@@ -1,4 +1,6 @@
 python () {
+    import os
+
     for pkg in (d.getVar('FINIT_PACKAGES') or "").split():
         # Sanity check, finit package must be included in PACKAGES
         mlprefix = d.getVar('MLPREFIX')
@@ -14,12 +16,23 @@ python () {
             raise bb.parse.SkipRecipe("FINIT_SERVICES:%s must be defined for %s package." % (pkg, pkg))
 
         for finit_service in (d.getVar('FINIT_SERVICES:%s' % pkg) or "").split():
+            # Sanity check, system critical service must be enabled
+            service_enabled = d.getVarFlag('FINIT_AUTO_ENABLE', finit_service) or d.getVar('FINIT_AUTO_ENABLE')
+            service_critical = d.getVarFlag('FINIT_SYSTEM_CRITICAL_SERVICE', finit_service) or d.getVar('FINIT_SYSTEM_CRITICAL_SERVICE')
+            if oe.types.boolean(service_critical) and service_enabled != "enabled":
+                raise bb.parse.SkipRecipe("System critical service %s must be a enabled service (FINIT_AUTO_ENABLE set to 'enabled')." % finit_service)
+
+            if oe.types.boolean(service_critical):
+                service_installdir = os.path.join(d.getVar('libdir'), 'finit', 'system')
+            else:
+                service_installdir = os.path.join(d.getVar('sysconfdir'), 'finit.d')
+
             files_var = "FILES:" + finit_pkg
             srcuri_var = "SRC_URI"
 
             d.appendVar(srcuri_var, " file://%s.finit" % finit_service)
-            d.appendVar(files_var, " %s/finit.d/%s.conf" % (d.getVar('sysconfdir'), finit_service))
-            d.appendVar(files_var, " %s/finit.d/available/%s.conf" % (d.getVar('sysconfdir'), finit_service))
+            d.appendVar(files_var, " %s/%s.conf" % (service_installdir, finit_service))
+            d.appendVar(files_var, " %s/available/%s.conf" % (service_installdir, finit_service))
 
     # Inhibit update-rc.d
     d.setVar('INHIBIT_UPDATERCD_BBCLASS', 1)
@@ -37,25 +50,45 @@ FINIT_SYSVINIT_INHIBIT ?= "1"
 # The service1, service2 are items listed in FINIT_SERVICES_${PN}.
 FINIT_AUTO_ENABLE ?= "enabled"
 
+# When set to 1, the finit service would be installed to ${libdir}/finit/system,
+# otherwise, it would be installed to ${sysconfdir}/finit.d
+#
+# To be noticed, a system critical service must be a enabled service, it could not
+# be a "available" service, means FINIT_AUTO_ENABLE[service] must be set to "enabled"
+#
+# To set system critical for a specific service in case there are multiple finit services:
+# FINIT_SYSTEM_CRITICAL_SERVICE[service1] = "1"
+# FINIT_SYSTEM_CRITICAL_SERVICE[service2] = "1"
+FINIT_SYSTEM_CRITICAL_SERVICE ?= "0"
+
 python finit_collect_services () {
     services = []
     for finit_pkg in (d.getVar('FINIT_PACKAGES') or "").split():
         for finit_service in (d.getVar('FINIT_SERVICES:%s' % finit_pkg) or "").split():
             service_enabled = d.getVarFlag('FINIT_AUTO_ENABLE', finit_service) or d.getVar('FINIT_AUTO_ENABLE')
-            services.append('%s:%s' % (finit_service, service_enabled))
+            service_critical = d.getVarFlag('FINIT_SYSTEM_CRITICAL_SERVICE', finit_service) or d.getVar('FINIT_SYSTEM_CRITICAL_SERVICE')
+            services.append('%s:%s:%s' % (finit_service, service_enabled, service_critical))
     d.setVar('FINIT_INSTALL_SERVICES', " ".join(services))
 }
 
 finit_install_services () {
-    install -d ${D}${sysconfdir}/finit.d
     for service in ${FINIT_INSTALL_SERVICES}; do
         service_file=$(echo $service | cut -d ':' -f 1)
         service_enabled=$(echo $service | cut -d ':' -f 2)
+        service_critical=$(echo $service | cut -d ':' -f 3)
+
+        if [ "$service_critical" = "1" -o "$service_critical" = "true" -o "$service_critical" = "on" ]; then
+            service_installdir="${libdir}/finit/system"
+        else
+            service_installdir="${sysconfdir}/finit.d"
+        fi
+
+        install -d ${D}"$service_installdir"
         if [ "$service_enabled" = "enabled" ]; then
-            install -m 0644 ${WORKDIR}/"$service_file".finit ${D}${sysconfdir}/finit.d/"$service_file".conf
+            install -m 0644 ${WORKDIR}/"$service_file".finit ${D}"$service_installdir"/"$service_file".conf
         elif [ "$service_enabled" = "available" ]; then
-            install -d ${D}${sysconfdir}/finit.d/available
-            install -m 0644 ${WORKDIR}/"$service_file".finit ${D}${sysconfdir}/finit.d/available/"$service_file".conf
+            install -d ${D}$service_installdir/available
+            install -m 0644 ${WORKDIR}/"$service_file".finit ${D}"$service_installdir"/available/"$service_file".conf
         else
             bbfatal "Inavlid FINIT_AUTO_ENABLE value for $service_file: $service_enabled, only 'enabled' or 'available' is valid."
         fi
