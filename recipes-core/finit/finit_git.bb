@@ -61,9 +61,9 @@ TARGET_CFLAGS += "-DFINIT_NOLOGIN_PATH=\\"${NOLOGINS_FILE}\\""
 
 inherit autotools gettext pkgconfig update-alternatives
 
-SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master"
+SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=finit"
 
-SRCREV = "185a72bd14d0ec9780df14d32e62e4b23bb63c74"
+SRCREV_finit = "185a72bd14d0ec9780df14d32e62e4b23bb63c74"
 
 PV = "4.11+git${SRCPV}"
 
