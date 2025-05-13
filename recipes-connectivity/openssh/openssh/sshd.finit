@@ -1,1 +1,1 @@
-task [2345] /etc/init.d/sshd start -- SSH Daemon
+task [2345] <net/lo/up> /etc/init.d/sshd start -- SSH Daemon
