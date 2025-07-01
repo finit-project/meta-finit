@@ -1,0 +1,1 @@
+service [2345] <service/connmand/running> /usr/bin/suricata -c /etc/suricata/suricata.yaml -v --af-packet  -- Suricata Daemon
