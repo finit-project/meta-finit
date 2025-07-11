@@ -4,7 +4,7 @@ SECTION = "base"
 HOMEPAGE = "https://github.com/troglobit/finit"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=2d3abaee2ea02299a386be535cf5bee5"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7f4881796913b7fa3c08182acd0b3987"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
