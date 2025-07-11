@@ -19,6 +19,7 @@ PACKAGECONFIG ??= "auto-reload \
                    random-seed \
                    hook-scripts-plugin \
                    kernel-cmdline \
+                   libsystemd \
                    modules-load-plugin \
                    hotplug-plugin \
                    netlink-plugin \
@@ -41,6 +42,7 @@ PACKAGECONFIG[fastboot] = "--enable-fastboot,--disable-fastboot"
 PACKAGECONFIG[fsckfix] = "--enable-fsckfix,--disable-fsckfix"
 PACKAGECONFIG[redirect] = "--enable-redirect,--disable-redirect"
 PACKAGECONFIG[rescue] = "--enable-rescue,--disable-rescue"
+PACKAGECONFIG[libsystemd] = "--with-libsystemd,--without-libsystemd"
 PACKAGECONFIG[sulogin] = "--with-sulogin,--without-sulogin,,util-linux-sulogin"
 PACKAGECONFIG[modules-load-plugin] = "--enable-modules-load-plugin,--disable-modules-load-plugin"
 PACKAGECONFIG[modprobe-plugin] = "--enable-modprobe-plugin,--disable-modprobe-plugin,,kmod"
@@ -63,7 +65,8 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=finit"
 
-SRCREV_finit = "77404a2ea09764c3e38ba35d1e34c46e0a031819"
+# tag 4.13
+SRCREV_finit = "85484178e068bebfb96c029471f2d135f06a7fce"
 
 PV = "4.13+git${SRCPV}"
 
