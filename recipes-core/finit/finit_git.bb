@@ -106,4 +106,7 @@ do_install:append() {
     ln -sf ${libexecdir}/finit/logit ${D}${base_sbindir}/logit
     ln -sf ${libexecdir}/finit/runparts ${D}${base_sbindir}/runparts
     ln -sf  ${localstatedir}/lib/dbus/machine-id ${D}${sysconfdir}/machine-id
+
+    # /var/tmp in finit's tmpfiles  does not comply with OE's meta/files/fs-perms.txt
+    sed -i -e "/d.*var\/tmp/d" ${D}${libdir}/tmpfiles.d/var.conf
 }
