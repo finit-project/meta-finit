@@ -20,7 +20,7 @@ Build a image within KAS:
 ```
 $ mkdir ~/finit-workspace
 $ cd ~/finit-workspace
-$ git clone https://github.com/liuming50/meta-finit.git
+$ git clone https://github.com/finit-project/meta-finit
 $ kas build ~/finit-workspace/meta-finit/kas/qemuarm64.yml
 ```
 
