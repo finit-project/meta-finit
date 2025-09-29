@@ -4,7 +4,7 @@ SECTION = "base"
 HOMEPAGE = "https://github.com/troglobit/finit"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=2d3abaee2ea02299a386be535cf5bee5"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7f4881796913b7fa3c08182acd0b3987"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -15,13 +15,12 @@ def get_custom_rtc_restore_date(d):
 RTC_RESTORE_DATE = "${@get_custom_rtc_restore_date(d)}"
 
 PACKAGECONFIG ??= "auto-reload \
-                   cgroup \
                    fastboot \
                    random-seed \
                    hook-scripts-plugin \
                    kernel-cmdline \
+                   libsystemd \
                    modules-load-plugin \
-                   modprobe-plugin \
                    hotplug-plugin \
                    netlink-plugin \
                    dbus-plugin \
@@ -43,6 +42,7 @@ PACKAGECONFIG[fastboot] = "--enable-fastboot,--disable-fastboot"
 PACKAGECONFIG[fsckfix] = "--enable-fsckfix,--disable-fsckfix"
 PACKAGECONFIG[redirect] = "--enable-redirect,--disable-redirect"
 PACKAGECONFIG[rescue] = "--enable-rescue,--disable-rescue"
+PACKAGECONFIG[libsystemd] = "--with-libsystemd,--without-libsystemd"
 PACKAGECONFIG[sulogin] = "--with-sulogin,--without-sulogin,,util-linux-sulogin"
 PACKAGECONFIG[modules-load-plugin] = "--enable-modules-load-plugin,--disable-modules-load-plugin"
 PACKAGECONFIG[modprobe-plugin] = "--enable-modprobe-plugin,--disable-modprobe-plugin,,kmod"
@@ -63,11 +63,12 @@ TARGET_CFLAGS += "-DFINIT_NOLOGIN_PATH=\\"${NOLOGINS_FILE}\\""
 
 inherit autotools gettext pkgconfig update-alternatives
 
-SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master"
+SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=finit"
 
-SRCREV = "ecf65ce44bd30bb00f2214794143affa04a43c9f"
+# tag 4.14
+SRCREV_finit = "6f6267f3b3c08c1868a51cb8f241ade83dd095d5"
 
-PV = "4.9+git${SRCPV}"
+PV = "4.14+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
@@ -76,7 +77,7 @@ PACKAGES =+ "${PN}-plugins ${PN}-bash-completion"
 DEPENDS += "libuev libite virtual/crypt"
 RDEPENDS:${PN} += "${PN}-plugins util-linux-fsck"
 
-FILES:${PN} += "${libdir}/tmpfiles.d"
+FILES:${PN} += "${nonarch_libdir}/tmpfiles.d"
 FILES:${PN}-plugins = "${libdir}/finit/plugins"
 FILES:${PN}-bash-completion = "${datadir}/bash-completion"
 
@@ -105,4 +106,7 @@ do_install:append() {
     ln -sf ${libexecdir}/finit/logit ${D}${base_sbindir}/logit
     ln -sf ${libexecdir}/finit/runparts ${D}${base_sbindir}/runparts
     ln -sf  ${localstatedir}/lib/dbus/machine-id ${D}${sysconfdir}/machine-id
+
+    # /var/tmp in finit's tmpfiles does not comply with OE's meta/files/fs-perms.txt
+    sed -i -e "/d.*var\/tmp/d" ${D}${nonarch_libdir}/tmpfiles.d/var.conf
 }

@@ -1,0 +1,1 @@
+service [2345] <task/variscite-wifi/success,service/dbus/running> /usr/sbin/connmand -n -- connman Daemon
