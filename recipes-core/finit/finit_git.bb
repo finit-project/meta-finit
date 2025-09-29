@@ -77,7 +77,7 @@ PACKAGES =+ "${PN}-plugins ${PN}-bash-completion"
 DEPENDS += "libuev libite virtual/crypt"
 RDEPENDS:${PN} += "${PN}-plugins util-linux-fsck"
 
-FILES:${PN} += "${libdir}/tmpfiles.d"
+FILES:${PN} += "${nonarch_libdir}/tmpfiles.d"
 FILES:${PN}-plugins = "${libdir}/finit/plugins"
 FILES:${PN}-bash-completion = "${datadir}/bash-completion"
 
@@ -107,6 +107,6 @@ do_install:append() {
     ln -sf ${libexecdir}/finit/runparts ${D}${base_sbindir}/runparts
     ln -sf  ${localstatedir}/lib/dbus/machine-id ${D}${sysconfdir}/machine-id
 
-    # /var/tmp in finit's tmpfiles  does not comply with OE's meta/files/fs-perms.txt
-    sed -i -e "/d.*var\/tmp/d" ${D}${libdir}/tmpfiles.d/var.conf
+    # /var/tmp in finit's tmpfiles does not comply with OE's meta/files/fs-perms.txt
+    sed -i -e "/d.*var\/tmp/d" ${D}${nonarch_libdir}/tmpfiles.d/var.conf
 }
