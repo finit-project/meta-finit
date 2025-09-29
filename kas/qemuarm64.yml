@@ -1,27 +1,25 @@
 header:
-  version: 14
-
-distro: poky
+  version: 8
 
 repos:
+  poky:
     url: git://git.yoctoproject.org/poky.git
-    commit: scarthgap
+    branch: scarthgap
     layers:
       meta:
       meta-poky:
       meta-yocto-bsp:
 
   meta-finit:
-    url: https://github.com/liuming50/meta-finit.git
-    commit: scarthgap
 
 local_conf_header:
   base: |
     CONF_VERSION = "2"
     DISTRO_FEATURES:append = " finit"
+    EXTRA_IMAGE_FEATURES = "debug-tweaks"
+    QB_KERNEL_CMDLINE_APPEND:append = " quiet logo.nologo"
     INIT_MANAGER = "finit"
 
+distro: poky
 machine: qemuarm64
-
-target:
-  - core-image-minimal
+target: core-image-minimal
