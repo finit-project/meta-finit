@@ -1,0 +1,1 @@
+service [2345] /usr/sbin/ntpd -u ntp:ntp -p /var/run/ntpd.pid -g -n -- NTP Daemon
