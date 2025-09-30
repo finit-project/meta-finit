@@ -72,30 +72,32 @@ python finit_collect_services () {
 }
 
 finit_install_services () {
-    for service in ${FINIT_INSTALL_SERVICES}; do
-        service_file=$(echo $service | cut -d ':' -f 1)
-        service_enabled=$(echo $service | cut -d ':' -f 2)
-        service_critical=$(echo $service | cut -d ':' -f 3)
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'finit', 'true', 'false', d)}; then
+        for service in ${FINIT_INSTALL_SERVICES}; do
+            service_file=$(echo $service | cut -d ':' -f 1)
+            service_enabled=$(echo $service | cut -d ':' -f 2)
+            service_critical=$(echo $service | cut -d ':' -f 3)
 
-        if [ "$service_critical" = "1" -o "$service_critical" = "true" -o "$service_critical" = "on" ]; then
-            service_installdir="${libdir}/finit/system"
-        else
-            service_installdir="${sysconfdir}/finit.d"
+            if [ "$service_critical" = "1" -o "$service_critical" = "true" -o "$service_critical" = "on" ]; then
+                service_installdir="${libdir}/finit/system"
+            else
+                service_installdir="${sysconfdir}/finit.d"
+            fi
+
+            install -d ${D}"$service_installdir"
+            if [ "$service_enabled" = "enabled" ]; then
+                install -m 0644 ${WORKDIR}/"$service_file".finit ${D}"$service_installdir"/"$service_file".conf
+            elif [ "$service_enabled" = "available" ]; then
+                install -d ${D}$service_installdir/available
+                install -m 0644 ${WORKDIR}/"$service_file".finit ${D}"$service_installdir"/available/"$service_file".conf
+            else
+                bbfatal "Inavlid FINIT_AUTO_ENABLE value for $service_file: $service_enabled, only 'enabled' or 'available' is valid."
+            fi
+        done
+
+        if [ ${@ oe.types.boolean('${FINIT_SYSVINIT_INHIBIT}')} = True ]; then
+            rm -rf ${D}${sysconfdir}/init.d
         fi
-
-        install -d ${D}"$service_installdir"
-        if [ "$service_enabled" = "enabled" ]; then
-            install -m 0644 ${WORKDIR}/"$service_file".finit ${D}"$service_installdir"/"$service_file".conf
-        elif [ "$service_enabled" = "available" ]; then
-            install -d ${D}$service_installdir/available
-            install -m 0644 ${WORKDIR}/"$service_file".finit ${D}"$service_installdir"/available/"$service_file".conf
-        else
-            bbfatal "Inavlid FINIT_AUTO_ENABLE value for $service_file: $service_enabled, only 'enabled' or 'available' is valid."
-        fi
-    done
-
-    if [ ${@ oe.types.boolean('${FINIT_SYSVINIT_INHIBIT}')} = True ]; then
-        rm -rf ${D}${sysconfdir}/init.d
     fi
 }
 do_install[prefuncs] += "finit_collect_services"
