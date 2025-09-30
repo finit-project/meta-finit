@@ -1,0 +1,1 @@
+service pid:lighttpd [2345] /usr/sbin/lighttpd -D -f /etc/lighttpd/lighttpd.conf -- Lightweight web server

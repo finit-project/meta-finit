@@ -1,0 +1,1 @@
+service [2345] <pid/ac-wl-ctrl> /usr/libexec/bluetooth/bluetoothd -n  -- Bluetooth Daemon
