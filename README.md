@@ -1,5 +1,5 @@
 # meta-finit
-OpenEmbedded/Yocto layer for [finit](https://github.com/finit-project/finit)
+OpenEmbedded/Yocto layer for [Finit](https://github.com/finit-project/finit)(FastInit)
 
 
 # Dependencies
