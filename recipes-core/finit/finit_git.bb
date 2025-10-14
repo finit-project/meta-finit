@@ -50,6 +50,7 @@ PACKAGECONFIG[hotplug-plugin] = "--enable-hotplug-plugin,--disable-hotplug-plugi
 PACKAGECONFIG[hook-scripts-plugin] = "--enable-hook-scripts-plugin,--disable-hook-scripts-plugin"
 PACKAGECONFIG[rc-local] = "--with-rc-local=${sysconfdir}/rc.loal,--without-rc-local"
 PACKAGECONFIG[rtc-plugin] = '--enable-rtc-plugin --with-rtc-date="${RTC_RESTORE_DATE}",--disable-rtc-plugin'
+PACKAGECONFIG[rtc-file] ="--with-rtc-file=yes,--without-rtc-file"
 PACKAGECONFIG[urandom-plugin] = "--enable-urandom-plugin,--disable-urandom-plugin"
 PACKAGECONFIG[tty-plugin] = "--enable-tty-plugin,--disable-tty-plugin"
 PACKAGECONFIG[netlink-plugin] = "--enable-netlink-plugin,--disable-netlink-plugin"
