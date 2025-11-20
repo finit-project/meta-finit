@@ -12,7 +12,8 @@ def get_custom_rtc_restore_date(d):
     import datetime
     return datetime.datetime.fromtimestamp(int(d.getVar("REPRODUCIBLE_TIMESTAMP_ROOTFS")), datetime.timezone.utc).strftime('%4Y-%2m-%2d %2H:%2M:%2S')
 
-RTC_RESTORE_DATE = "${@get_custom_rtc_restore_date(d)}"
+RTC_RESTORE_DATE ?= "${@get_custom_rtc_restore_date(d)}"
+RANDOM_SEED_FILE ?= "/var/lib/misc/random-seed"
 
 PACKAGECONFIG ??= "auto-reload \
                    fastboot \
@@ -31,7 +32,7 @@ PACKAGECONFIG ??= "auto-reload \
                    tty-plugin \
                   "
 
-PACKAGECONFIG[random-seed] = "--with-random-seed=/var/lib/misc/random-seed,--without-random-seed"
+PACKAGECONFIG[random-seed] = "--with-random-seed=${RANDOM_SEED_FILE},--without-random-seed"
 PACKAGECONFIG[auto-reload] = "--enable-auto-reload,--disable-auto-reload"
 PACKAGECONFIG[cgroup] = "--enable-cgroup,--disable-cgroup"
 PACKAGECONFIG[contrib] = "--enable-contrib,--disable-contrib"
