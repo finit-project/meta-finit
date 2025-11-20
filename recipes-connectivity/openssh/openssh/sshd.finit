@@ -1,1 +1,1 @@
-task [2345] <net/lo/up> /etc/init.d/sshd start -- Openssh SSH Daemon
+service [2345] <task/sshdgenkeys/success> /usr/sbin/sshd -D -- Openssh SSH Daemon
