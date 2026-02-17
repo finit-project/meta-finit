@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3f81ad298cfae5094ebb68e1b9fdab96"
 
 SRC_URI = "git://github.com/troglobit/libite.git;protocol=https;branch=master"
 
-SRCREV = "9bfe54f95968b97bc3dcd1a3d38abed086435461"
-PV = "2.6.1+git${SRCPV}"
+SRCREV = "c1e050f93c147e7d73aba09ab536629110f053cd"
+PV = "2.6.2+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
