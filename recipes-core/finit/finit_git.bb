@@ -14,12 +14,14 @@ def get_custom_rtc_restore_date(d):
 
 RTC_RESTORE_DATE ?= "${@get_custom_rtc_restore_date(d)}"
 RANDOM_SEED_FILE ?= "/var/lib/misc/random-seed"
+WATCHDOG_DEVICE ?= "/dev/watchdog"
 
 PACKAGECONFIG ??= "auto-reload \
                    fastboot \
                    random-seed \
                    hook-scripts-plugin \
                    kernel-cmdline \
+                   libcap \
                    libsystemd \
                    modules-load-plugin \
                    hotplug-plugin \
@@ -42,7 +44,10 @@ PACKAGECONFIG[kernel-logging] = "--enable-kernel-logging,--disable-kernel-loggin
 PACKAGECONFIG[fastboot] = "--enable-fastboot,--disable-fastboot"
 PACKAGECONFIG[fsckfix] = "--enable-fsckfix,--disable-fsckfix"
 PACKAGECONFIG[redirect] = "--enable-redirect,--disable-redirect"
+PACKAGECONFIG[watchdog] = "--with-watchdog=${WATCHDOG_DEVICE},--without-watchdog"
+PACKAGECONFIG[reboot-watchdog] = ",,"
 PACKAGECONFIG[rescue] = "--enable-rescue,--disable-rescue"
+PACKAGECONFIG[libcap] = "--enable-libcap,--disable-libcap,libcap"
 PACKAGECONFIG[libsystemd] = "--with-libsystemd,--without-libsystemd"
 PACKAGECONFIG[sulogin] = "--with-sulogin,--without-sulogin,,util-linux-sulogin"
 PACKAGECONFIG[modules-load-plugin] = "--enable-modules-load-plugin,--disable-modules-load-plugin"
@@ -67,9 +72,9 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=finit"
 
-SRCREV_finit = "c23952cd9e0c8d8f74bd8caa806dd0f5169cdd15"
+SRCREV_finit = "92a2861b1cdbf10531dc6b5b87baca6a66c96ee0"
 
-PV = "4.14+git${SRCPV}"
+PV = "4.16-beta1+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
@@ -107,6 +112,11 @@ do_install:append() {
     ln -sf ${libexecdir}/finit/logit ${D}${base_sbindir}/logit
     ln -sf ${libexecdir}/finit/runparts ${D}${base_sbindir}/runparts
     ln -sf  ${localstatedir}/lib/dbus/machine-id ${D}${sysconfdir}/machine-id
+
+    if ${@bb.utils.contains('PACKAGECONFIG','reboot-watchdog','true','false',d)}; then
+        echo -e "\n# Controls whether the system should reboot via the watchdog timer (WDT)" >> ${D}${sysconfdir}/finit.conf
+        echo "reboot-watchdog = on" >> ${D}${sysconfdir}/finit.conf
+    fi
 
     # /var/tmp in finit's tmpfiles does not comply with OE's meta/files/fs-perms.txt
     sed -i -e "/d.*var\/tmp/d" ${D}${nonarch_libdir}/tmpfiles.d/var.conf
