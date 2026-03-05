@@ -1,0 +1,1 @@
+service [S12345] /usr/sbin/rsyslogd -n -- System Log Daemon
