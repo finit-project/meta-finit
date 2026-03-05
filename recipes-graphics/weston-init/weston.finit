@@ -1,1 +1,1 @@
-task [2345] /etc/init.d/weston start -- Start weston
+service [2345] name:weston /usr/bin/weston-start -- Start weston
