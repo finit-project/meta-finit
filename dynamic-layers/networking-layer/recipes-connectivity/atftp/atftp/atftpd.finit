@@ -1,0 +1,1 @@
+service [2345] env:-/etc/default/atftpd /usr/sbin/atftpd $ATFTPD_OPTS  -- TFTP Daemon
