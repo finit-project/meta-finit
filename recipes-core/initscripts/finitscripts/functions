@@ -28,7 +28,7 @@ BRACKET="\\033[1;34m"        # Brackets are blue
 pidofproc () {
 
 	# pidof output null when no program is running, so no "2>/dev/null".
-	pid=`pidof -x $1`
+	pid=`pidof $1`
 	status=$?
 	case $status in
 	0)
@@ -91,4 +91,25 @@ passed() {
     local rc=$*
     echo -n -e "${BRACKET}[${SUCCESS} PASS ${BRACKET}]${NORMAL}"
     return $rc
+}
+
+log_success_msg()
+{
+    echo -n $@
+    success
+    echo
+}
+
+log_failure_msg()
+{
+    echo -n $@
+    failure
+    echo
+}
+
+log_warning_msg()
+{
+    echo -n $@
+    warning
+    echo
 }
