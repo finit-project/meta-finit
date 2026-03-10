@@ -70,7 +70,9 @@ TARGET_CFLAGS += "-DFINIT_NOLOGIN_PATH=\\"${NOLOGINS_FILE}\\""
 
 inherit autotools gettext pkgconfig update-alternatives
 
-SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=finit"
+SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=finit \
+           file://10-hotplug.conf \
+"
 
 SRCREV_finit = "4ce810cc1f03e8f0bfdc69ff7bf19f57b6a8a756"
 
@@ -112,6 +114,12 @@ do_install:append() {
     ln -sf ${libexecdir}/finit/logit ${D}${base_sbindir}/logit
     ln -sf ${libexecdir}/finit/runparts ${D}${base_sbindir}/runparts
     ln -sf  ${localstatedir}/lib/dbus/machine-id ${D}${sysconfdir}/machine-id
+
+    if ${@bb.utils.contains('PACKAGECONFIG','hotplug-plugin','true','false',d)}; then
+        # Install a customized 10-hotplug.conf
+        rm -f ${D}${libdir}/finit/system/10-hotplug.conf
+        install -m 0644 ${WORKDIR}/10-hotplug.conf ${D}${libdir}/finit/system
+    fi
 
     if ${@bb.utils.contains('PACKAGECONFIG','reboot-watchdog','true','false',d)}; then
         echo -e "\n# Controls whether the system should reboot via the watchdog timer (WDT)" >> ${D}${sysconfdir}/finit.conf
