@@ -82,7 +82,7 @@ SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=fi
 
 SRCREV_finit = "4867b7268b415795c2d15298b38f2518f34f5240"
 
-PV = "4.16+git${SRCPV}"
+PV = "4.16"
 
 S = "${WORKDIR}/git"
 
