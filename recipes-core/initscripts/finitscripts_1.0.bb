@@ -11,6 +11,8 @@ inherit finit
 
 FINIT_SERVICES:${PN} = "devconsole ${@'developer' if oe.types.boolean(d.getVar('FINIT_DEVELOPER')) else ''}"
 
+FINIT_SYSVINIT_INHIBIT = "0"
+
 # When being enabled, a devconsole would be started for users to login
 FINIT_DEVELOPER ?= "1"
 
