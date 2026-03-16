@@ -16,6 +16,7 @@ FINIT_DEVELOPER ?= "1"
 
 SRC_URI = " \
     file://functions \
+    file://developer.sh \
 "
 
 do_install () {
