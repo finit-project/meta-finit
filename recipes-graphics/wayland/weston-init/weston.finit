@@ -1,0 +1,1 @@
+service [2345] name:weston <service/udevd/ready> /usr/bin/weston-start -- Start weston
