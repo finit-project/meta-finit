@@ -1,1 +1,0 @@
-service [2345] name:weston /usr/bin/weston-start -- Start weston
