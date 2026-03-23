@@ -28,7 +28,7 @@ BRACKET="\\033[1;34m"        # Brackets are blue
 pidofproc () {
 
 	# pidof output null when no program is running, so no "2>/dev/null".
-	pid=`pidof $1`
+	pid=`pidof -x $1`
 	status=$?
 	case $status in
 	0)
