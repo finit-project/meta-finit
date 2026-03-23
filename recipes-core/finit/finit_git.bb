@@ -70,6 +70,7 @@ PACKAGECONFIG[dbus-plugin] = "--enable-dbus-plugin,--disable-dbus-plugin,dbus,db
 PACKAGECONFIG[alsa-utils-plugin] = "--enable-alsa-utils-plugin,--disable-alsa-utils-plugin,alsa-utils,alsa-utils-alsactl"
 PACKAGECONFIG[x11-common-plugin] = "--enable-x11-common-plugin,--disable-x11-common-plugin,virtual/libx11"
 PACKAGECONFIG[resolvconf-plugin] = "--enable-resolvconf-plugin,--disable-resolvconf-plugin,resolvconf,resolvconf"
+PACKAGECONFIG[plymouth-plugin] = "--enable-plymouth-plugin,--disable-plymouth-plugin,plymouth,plymouth"
 PACKAGECONFIG[testserv-plugin] = "--enable-testserv-plugin,--disable-testserv-plugin"
 
 TARGET_CFLAGS += "-DFINIT_NOLOGIN_PATH=\\"${NOLOGINS_FILE}\\""
@@ -80,7 +81,7 @@ SRC_URI = "git://github.com/troglobit/finit;protocol=https;branch=master;name=fi
            file://10-hotplug.conf \
 "
 
-SRCREV_finit = "4867b7268b415795c2d15298b38f2518f34f5240"
+SRCREV_finit = "a81530754b1d43c5bf01e4777738e6807083f428"
 
 PV = "4.16"
 
