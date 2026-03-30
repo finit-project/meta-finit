@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7f4881796913b7fa3c08182acd0b3987"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-get_custom_rtc_restore_date[vardepsexclude] = "DATETIME"
 def get_custom_rtc_restore_date(d):
     import datetime
 
@@ -16,12 +15,13 @@ def get_custom_rtc_restore_date(d):
     if timestamp:
         return datetime.datetime.fromtimestamp(int(timestamp), datetime.timezone.utc).strftime('%4Y-%2m-%2d %2H:%2M:%2S')
     else:
-        return datetime.datetime.strptime(d.getVar("DATETIME"), "%Y%m%d%H%M%S").strftime('%4Y-%2m-%2d %2H:%2M:%2S')
+        return datetime.datetime.now().strftime('%4Y-%2m-%2d %2H:%2M:%2S')
 
 RTC_RESTORE_DATE ?= "${@get_custom_rtc_restore_date(d)}"
 RANDOM_SEED_FILE ?= "/var/lib/misc/random-seed"
 WATCHDOG_DEVICE ?= "/dev/watchdog"
 
+PACKAGECONFIG_CONFARGS[vardepsexclude] = "RTC_RESTORE_DATE"
 PACKAGECONFIG ??= "auto-reload \
                    fastboot \
                    random-seed \
