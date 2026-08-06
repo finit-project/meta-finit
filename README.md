@@ -5,7 +5,7 @@ OpenEmbedded/Yocto layer for [Finit](https://github.com/finit-project/finit) (Fa
 # Dependencies
 
 ```
-URI: git://git.yoctoproject.org/poky
+URI: https://git.yoctoproject.org/poky
 ```
 
 
